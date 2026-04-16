@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection System | AI-Powered Risk Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ AI Fraud Detection System</h1>
+            <p class="subtitle">Powered by Your Trained SVC Model</p>
+        </header>
+
+        <div class="grid">
+            <!-- Input Form -->
+            <div class="card">
+                <h2>📝 Applicant Information</h2>
+                <form method="POST" action="/predict" id="predictionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age *</label>
+                            <input type="number" name="age" required placeholder="25" value="28">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Document Type *</label>
+                            <select name="document_type">
+                                <option value="passport">Passport</option>
+                                <option value="driver_license">Driver's License</option>
+                                <option value="national_id">National ID</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Valid *</label>
+                            <select name="phone_valid">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Risk Score (0-1) *</label>
+                            <input type="number" step="0.01" name="email_risk" required placeholder="0.0" value="0.1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>IP Type *</label>
+                            <select name="ip_type">
+                                <option value="residential">Residential</option>
+                                <option value="datacenter">Datacenter</option>
+                                <option value="mobile">Mobile</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>IP Risk Score (0-1) *</label>
+                            <input type="number" step="0.01" name="ip_risk_score" required placeholder="0.0" value="0.15">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>IP Country Mismatch *</label>
+                            <select name="ip_address_country_mismatch">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Operating System *</label>
+                            <select name="os">
+                                <option value="windows">Windows</option>
+                                <option value="macos">macOS</option>
+                                <option value="linux">Linux</option>
+                                <option value="android">Android</option>
+                                <option value="ios">iOS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Device is New *</label>
+                            <select name="device_is_new">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Accounts Same Device *</label>
+                            <input type="number" name="accounts_same_device" required placeholder="0" value="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Accounts Same IP *</label>
+                            <input type="number" name="accounts_same_ip" required placeholder="0" value="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Device Reuse Score (0-1) *</label>
+                            <input type="number" step="0.01" name="device_reuse_score" required placeholder="0.0" value="0.25">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Employment Status *</label>
+                            <select name="employment_status">
+                                <option value="employed">Employed</option>
+                                <option value="unemployed">Unemployed</option>
+                                <option value="student">Student</option>
+                                <option value="self_employed">Self-Employed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Annual Income (USD) *</label>
+                            <input type="number" name="annual_income" required placeholder="50000" value="65000">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Signup Duration (seconds) *</label>
+                            <input type="number" name="signup_duration_sec" required placeholder="120" value="95">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Number of Field Edits *</label>
+                            <input type="number" name="num_field_edits" required placeholder="5" value="8">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address Verification Score (0-1) *</label>
+                        <input type="number" step="0.01" name="address_verification_score" required placeholder="0.0" value="0.85">
+                    </div>
+
+                    <button type="submit" class="btn-primary">🔍 Analyze Risk</button>
+                </form>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="card">
+                <h2>📊 Risk Assessment Result</h2>
+                
+                {% if result %}
+                    <div class="result-container">
+                        <div class="prediction-badge {{ result.prediction_class }}">
+                            {% if result.is_fraud %}
+                                🚨 {{ result.prediction_text }}
+                            {% else %}
+                                ✅ {{ result.prediction_text }}
+                            {% endif %}
+                        </div>
+
+                        <div class="risk-section">
+                            <strong>Risk Level:</strong>
+                            <span class="risk-badge risk-{{ result.risk_level|lower }}">
+                                {{ result.risk_level }}
+                            </span>
+                        </div>
+
+                        <div class="probability-section">
+                            <label>Fraud Probability</label>
+                            <div class="probability-bar">
+                                <div class="probability-fill" style="width: {{ result.fraud_probability }}%;">
+                                    {{ result.fraud_probability }}%
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recommendations">
+                            <strong>🛡️ Security Recommendations:</strong>
+                            <ul>
+                                {% for rec in result.recommendations %}
+                                    <li>{{ rec }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% elif error %}
+                    <div class="error-message">
+                        ❌ Error: {{ error }}
+                    </div>
+                {% else %}
+                    <div class="placeholder">
+                        <p>Fill out the form and click "Analyze Risk" to see results</p>
+                        <p class="arrow">⬅️</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Model Info Section -->
+        <div class="card model-info">
+            <h2>🧠 Model Information</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">37</div>
+                    <div class="stat-label">Model Features</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Scaled Features</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Input Fields</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">&lt;100ms</div>
+                    <div class="stat-label">Response Time</div>
+                </div>
+            </div>
+            <div class="model-details">
+                <p><strong>Model Type:</strong> SVC (Support Vector Classifier)</p>
+                <p><strong>Status:</strong> <span class="status-badge status-success">✅ Active</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add loading animation on form submit
+        document.getElementById('predictionForm').addEventListener('submit', function() {
+            const btn = document.querySelector('.btn-primary');
+            btn.innerHTML = '⏳ Analyzing...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "scaled_columns": ["age", "ip_risk_score", "annual_income", "signup_duration_sec", "num_field_edits", "address_verification_score", "fields_edit_ratio"],
+  "final_features": ["age", "phone_valid", "ip_risk_score", "ip_address_country_mismatch", "device_is_new", "accounts_same_device", "accounts_same_ip", "device_reuse_score", "annual_income", "signup_duration_sec", "num_field_edits", "address_verification_score", "fields_edit_ratio", "document_type_Driving Licence", "document_type_PAN Card", "document_type_Passport", "document_type_Voter ID", "email_risk_disposable", "email_risk_free", "email_risk_legitimate", "email_risk_suspicious", "ip_type_Home Broadband", "ip_type_Mobile Data", "ip_type_Tor Exit Node", "ip_type_VPN", "os_Ubuntu 22.04", "os_Windows 10", "os_Windows 11", "os_iOS 17", "os_macOS 14", "employment_status_Daily Wage", "employment_status_Freelancer", "employment_status_Salaried Employee", "employment_status_Self-employed", "employment_status_Small Business", "employment_status_Student", "employment_status_Unemployed"],
+  "model_type": "SVC",
+  "threshold": 0.5
+}
